@@ -56,3 +56,10 @@ data/backup/
 *.tmp
 *.temp
 
+# Large files
+*.img
+*.iso
+*.zip
+*.tar.gz
+*.rar
+
