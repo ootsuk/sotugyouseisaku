@@ -25,6 +25,32 @@
 
 ---
 
+## 📁 ファイル作成手順（新人エンジニア向け）
+
+### Step 3: ファイル構造の作成
+
+#### 3.1 データディレクトリの確認
+```bash
+# プロジェクトディレクトリに移動
+cd /Users/ootsukayuya/wrok_space/sotugyouseisaku/smart-planter
+
+# データディレクトリの確認
+ls -la src/data/
+```
+
+#### 3.2 各ファイルの作成順序
+1. `src/data/csv_handler.py` - CSVファイル操作
+2. `src/data/data_manager.py` - データ統合管理
+3. `src/data/database.py` - データベース操作（将来用）
+
+#### 3.3 ファイル作成コマンド
+```bash
+# 各ファイルを作成
+touch src/data/csv_handler.py
+touch src/data/data_manager.py
+touch src/data/database.py
+```
+
 ## 📄 実装コード
 
 ### 📄 data_manager.py

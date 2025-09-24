@@ -25,6 +25,58 @@
 
 ---
 
+## 📁 ファイル作成手順（新人エンジニア向け）
+
+### Step 1: Web UIディレクトリの確認
+```bash
+# プロジェクトディレクトリに移動
+cd /Users/ootsukayuya/wrok_space/sotugyouseisaku/smart-planter
+
+# Web UIディレクトリの確認
+ls -la src/web/
+ls -la src/web/templates/
+ls -la src/web/static/
+```
+
+### Step 2: 各ファイルの作成順序
+1. `src/web/templates/base.html` - ベーステンプレート
+2. `src/web/templates/dashboard.html` - ダッシュボード
+3. `src/web/templates/settings.html` - 設定ページ
+4. `src/web/static/css/main.css` - メインスタイル
+5. `src/web/static/js/main.js` - メインJavaScript
+
+### Step 3: ファイル作成コマンド
+```bash
+# テンプレートファイルを作成
+touch src/web/templates/base.html
+touch src/web/templates/dashboard.html
+touch src/web/templates/settings.html
+
+# 静的ファイルを作成
+touch src/web/static/css/main.css
+touch src/web/static/js/main.js
+touch src/web/static/js/sensors.js
+touch src/web/static/js/dashboard.js
+
+# ディレクトリが存在しない場合は作成
+mkdir -p src/web/static/css
+mkdir -p src/web/static/js
+mkdir -p src/web/static/images
+```
+
+### Step 4: 依存関係の追加
+```bash
+# 仮想環境をアクティベート
+source venv/bin/activate
+
+# WebSocket関連ライブラリをインストール
+pip install Flask-SocketIO
+pip install python-socketio
+
+# requirements.txtを更新
+pip freeze > requirements.txt
+```
+
 ## 📄 実装コード
 
 ### 📄 templates/base.html

@@ -68,6 +68,32 @@ GPIO_PINS = {
 
 ---
 
+## 📁 ファイル作成手順（新人エンジニア向け）
+
+### Step 3: ファイル構造の作成
+
+#### 3.1 給水ディレクトリの確認
+```bash
+# プロジェクトディレクトリに移動
+cd /Users/ootsukayuya/wrok_space/sotugyouseisaku/smart-planter
+
+# 給水ディレクトリの確認
+ls -la src/watering/
+```
+
+#### 3.2 各ファイルの作成順序
+1. `src/watering/pump_control.py` - ポンプ制御
+2. `src/watering/watering_logic.py` - 給水判定ロジック
+3. `src/watering/watering_scheduler.py` - スケジューラー
+
+#### 3.3 ファイル作成コマンド
+```bash
+# 各ファイルを作成
+touch src/watering/pump_control.py
+touch src/watering/watering_logic.py
+touch src/watering/watering_scheduler.py
+```
+
 ## 📄 実装コード
 
 ### 📄 watering_controller.py

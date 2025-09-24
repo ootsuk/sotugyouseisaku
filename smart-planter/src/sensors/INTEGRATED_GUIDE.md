@@ -104,6 +104,36 @@ pip install numpy
 
 ---
 
+## 📁 ファイル作成手順（新人エンジニア向け）
+
+### Step 3: ファイル構造の作成
+
+#### 3.1 センサーディレクトリの確認
+```bash
+# プロジェクトディレクトリに移動
+cd /Users/ootsukayuya/wrok_space/sotugyouseisaku/smart-planter
+
+# センサーディレクトリの確認
+ls -la src/sensors/
+```
+
+#### 3.2 各ファイルの作成順序
+1. `src/sensors/base_sensor.py` - 基底クラス
+2. `src/sensors/temperature_humidity.py` - 温湿度センサー
+3. `src/sensors/soil_moisture.py` - 土壌水分センサー
+4. `src/sensors/float_switch.py` - フロートスイッチ
+5. `src/sensors/sensor_manager.py` - 統合管理
+
+#### 3.3 ファイル作成コマンド
+```bash
+# 各ファイルを作成
+touch src/sensors/base_sensor.py
+touch src/sensors/temperature_humidity.py
+touch src/sensors/soil_moisture.py
+touch src/sensors/float_switch.py
+touch src/sensors/sensor_manager.py
+```
+
 ## 📄 実装コード
 
 ### 📄 base_sensor.py
