@@ -1,0 +1,33 @@
+# すくすくミントちゃん 依存関係
+
+## コアライブラリ
+Flask==2.3.3
+Flask-SocketIO==5.3.6
+
+## センサー制御
+RPi.GPIO==0.7.1
+smbus2==1.4.3
+spidev==3.6
+
+## データ処理
+pandas==2.1.4
+numpy==1.24.3
+
+## 画像処理
+Pillow==10.1.0
+opencv-python==4.8.1.78
+
+## 通知・通信
+requests==2.31.0
+python-dotenv==1.0.0
+
+## 開発・テスト
+pytest==7.4.3
+pytest-cov==4.1.0
+black==23.11.0
+flake8==6.1.0
+
+## その他
+python-dateutil==2.8.2
+pytz==2023.3
+
