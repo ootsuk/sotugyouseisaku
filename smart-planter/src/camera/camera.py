@@ -88,9 +88,11 @@ class PlantCaptureManager:
 # --- 実行例 ---
 if __name__ == "__main__":
     manager = PlantCaptureManager()
-    print("起動")
+    # print("起動")
   
     # ここにスケジューリングのロジックを実装します。
     # 例：Pythonのthreading.TimerやAPSchedulerライブラリを使用
     # 現在は単純に再度実行する形で示します。
+    # AM7:00に撮影
+    
     manager.capture_and_save()
