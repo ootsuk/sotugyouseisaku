@@ -33,7 +33,7 @@ def delete_old_images():
     cutoff_date = today - datetime.timedelta(days=RETENTION_DAYS)
     
     # 保存ディレクトリ内の全JPEGファイルを検索
-    image_files = glob.glob(os.path.join(SAVE_DIR, "*.jpg"))
+    image_files = glob.glob(os.path.join(SAVE_DIR, "*.jp*g"))
     
     for file_path in image_files:
         # ファイルの作成日時を取得
