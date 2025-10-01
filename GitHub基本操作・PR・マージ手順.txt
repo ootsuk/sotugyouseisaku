@@ -1,0 +1,69 @@
+GitHub 基本操作・PR・マージ手順（チーム用）
+
+1. 前提
+- チーム人数：5人
+- GitHubリポジトリは既に作成済み
+- 各メンバーがローカルにGitをインストール済み
+- GitHubアカウント作成済み
+
+2. リポジトリのクローン
+1) GitHubからローカルにクローン
+   git clone <リポジトリURL>
+2) クローンしたディレクトリに移動
+   cd <リポジトリ名>
+
+3. ブランチの作成と切り替え
+1) 新しいブランチ作成（例：feature/login）
+   git checkout -b feature/login
+2) 現在のブランチを確認
+   git branch
+
+4. 変更のコミット
+1) 変更をステージング
+   git add .
+2) コミット（例：ログイン機能を追加）
+   git commit -m "Add login feature"
+
+5. リモートブランチへのプッシュ
+git push origin feature/login
+
+6. プルリクエスト (PR) 作成手順
+1) GitHubリポジトリにアクセス
+2) 「Pull requests」タブをクリック
+3) 「New pull request」をクリック
+4) 自分のブランチを比較対象に設定
+5) タイトルと内容を記入（例：ログイン機能の実装）
+6) 「Create pull request」をクリック
+
+7. レビュー手順
+- チームメンバーがPRを確認
+- コメントや修正依頼を行う
+- 修正が必要な場合は、ローカルブランチで修正 → git add → git commit → git push で更新
+
+8. マージ手順
+- レビュー完了後、承認されたPRをマージ
+1) PRページで「Merge pull request」をクリック
+2) 「Confirm merge」をクリック
+3) 不要になったブランチは削除（GitHub上で「Delete branch」をクリック）
+
+9. ローカルの同期
+1) mainブランチに切り替え
+   git checkout main
+2) 最新の状態を取得
+   git pull origin main
+
+10. 基本Gitコマンドまとめ
+- git clone <URL>       : リポジトリをローカルにコピー
+- git checkout -b <branch> : 新しいブランチ作成 & 切替
+- git branch             : 現在のブランチ確認
+- git add <file>         : 変更をステージング
+- git commit -m "msg"    : 変更をコミット
+- git push origin <branch> : リモートにプッシュ
+- git pull origin <branch> : リモートの変更を取得
+- git merge <branch>     : ブランチをマージ
+
+11. 注意点
+- こまめにコミットする
+- mainブランチは直接編集せず、必ずブランチを作成する
+- PRには変更内容をわかりやすく記載する
+- コンフリクトが発生した場合は手動で解消する
