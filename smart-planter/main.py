@@ -32,7 +32,7 @@ def main():
         # アプリケーション実行
         app.run(
             host='0.0.0.0',
-            port=5000,
+            port=8080,  # ポート5000はmacOSのAirPlay Receiverで使用中
             debug=False,
             threaded=True
         )

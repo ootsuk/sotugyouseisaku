@@ -34,7 +34,7 @@
 ### Step 1: センサーディレクトリの確認
 ```bash
 # プロジェクトディレクトリに移動
-cd /Users/ootsukayuya/wrok_space/sotugyouseisaku/smart-planter
+cd smart-planter
 
 # センサーディレクトリの確認
 ls -la src/sensors/

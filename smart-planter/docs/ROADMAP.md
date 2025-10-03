@@ -24,6 +24,9 @@
 
 #### 実装手順
 ```bash
+# プロジェクトルートから実行
+cd smart-planter
+
 # 1. ファイル作成
 touch src/sensors/base_sensor.py
 touch src/sensors/temperature_humidity.py
@@ -32,6 +35,7 @@ touch src/sensors/float_switch.py
 touch src/sensors/sensor_manager.py
 
 # 2. 依存関係インストール
+source venv/bin/activate
 pip install RPi.GPIO smbus2 spidev numpy
 
 # 3. 実装（各ファイルにコードを記述）

@@ -28,7 +28,7 @@
 ### Step 1: データディレクトリの確認
 ```bash
 # プロジェクトディレクトリに移動
-cd /Users/ootsukayuya/wrok_space/sotugyouseisaku/smart-planter
+cd smart-planter
 
 # データディレクトリの確認
 ls -la src/data/
