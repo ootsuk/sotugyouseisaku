@@ -1,5 +1,3 @@
-print("push_test")#pip install opencv-python
-
 import cv2
 import datetime
 import os
@@ -88,11 +86,7 @@ class PlantCaptureManager:
 # --- 実行例 ---
 if __name__ == "__main__":
     manager = PlantCaptureManager()
-    # print("起動")
-  
-    # ここにスケジューリングのロジックを実装します。
-    # 例：Pythonのthreading.TimerやAPSchedulerライブラリを使用
-    # 現在は単純に再度実行する形で示します。
-    # AM7:00に撮影
-    
+  #crontabによるスケジューリングを実装済み
+  #0 7 * * * cd /path/to/your/smart-planter/src && /usr/bin/env python3 camera.py
+  #TODO: USBに保存するよう変更 
     manager.capture_and_save()
