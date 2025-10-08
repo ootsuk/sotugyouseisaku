@@ -31,6 +31,7 @@ def create_app():
         """メインページ"""
         return render_template('index.html')
     
+    
     @app.route('/api/status')
     def api_status():
         """システムステータスAPI"""
