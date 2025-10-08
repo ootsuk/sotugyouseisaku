@@ -1,0 +1,707 @@
+{% extends "base.html" %}
+
+{% block title %}設定 - すくすくミントちゃん{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-cog"></i> システム設定</h2>
+                <div>
+                    <button type="button" class="btn btn-success" onclick="saveAllSettings()">
+                        <i class="fas fa-save"></i> 設定を保存
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="resetToDefaults()">
+                        <i class="fas fa-undo"></i> デフォルトに戻す
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- センサー設定 -->
+        <div class="col-lg-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-thermometer-half"></i> センサー設定</h5>
+                </div>
+                <div class="card-body">
+                    <form id="sensorSettingsForm">
+                        <!-- 温湿度センサー間隔 -->
+                        <div class="mb-3">
+                            <label for="temperatureHumidityInterval" class="form-label">
+                                <i class="fas fa-clock"></i> 温湿度測定間隔
+                            </label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="temperatureHumidityInterval" 
+                                       value="1800" min="60" max="3600" step="60">
+                                <span class="input-group-text">秒</span>
+                            </div>
+                            <div class="form-text">推奨: 1800秒（30分）</div>
+                        </div>
+
+                        <!-- 土壌水分センサー間隔 -->
+                        <div class="mb-3">
+                            <label for="soilMoistureInterval" class="form-label">
+                                <i class="fas fa-seedling"></i> 土壌水分測定間隔
+                            </label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="soilMoistureInterval" 
+                                       value="300" min="60" max="1800" step="60">
+                                <span class="input-group-text">秒</span>
+                            </div>
+                            <div class="form-text">推奨: 300秒（5分）</div>
+                        </div>
+
+                        <!-- センサーチェック間隔 -->
+                        <div class="mb-3">
+                            <label for="sensorCheckInterval" class="form-label">
+                                <i class="fas fa-sync"></i> センサーチェック間隔
+                            </label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="sensorCheckInterval" 
+                                       value="60" min="30" max="300" step="30">
+                                <span class="input-group-text">秒</span>
+                            </div>
+                            <div class="form-text">システム全体のセンサー監視間隔</div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- 給水設定 -->
+        <div class="col-lg-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="fas fa-tint"></i> 給水設定</h5>
+                </div>
+                <div class="card-body">
+                    <form id="wateringSettingsForm">
+                        <!-- 土壌水分閾値 -->
+                        <div class="mb-3">
+                            <label for="soilMoistureThreshold" class="form-label">
+                                <i class="fas fa-level-down-alt"></i> 土壌水分閾値
+                            </label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="soilMoistureThreshold" 
+                                       value="159" min="100" max="300" step="1">
+                                <span class="input-group-text">-</span>
+                            </div>
+                            <div class="form-text">この値以下で給水開始（推奨: 159）</div>
+                        </div>
+
+                        <!-- 給水間隔 -->
+                        <div class="mb-3">
+                            <label for="wateringIntervalHours" class="form-label">
+                                <i class="fas fa-hourglass-half"></i> 給水間隔
+                            </label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="wateringIntervalHours" 
+                                       value="12" min="1" max="48" step="1">
+                                <span class="input-group-text">時間</span>
+                            </div>
+                            <div class="form-text">前回給水からの最低間隔</div>
+                        </div>
+
+                        <!-- 給水時間 -->
+                        <div class="mb-3">
+                            <label for="wateringDurationSeconds" class="form-label">
+                                <i class="fas fa-stopwatch"></i> 給水時間
+                            </label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="wateringDurationSeconds" 
+                                       value="5" min="1" max="30" step="1">
+                                <span class="input-group-text">秒</span>
+                            </div>
+                            <div class="form-text">1回の給水時間（推奨: 5秒）</div>
+                        </div>
+
+                        <!-- 給水量 -->
+                        <div class="mb-3">
+                            <label for="waterAmountMl" class="form-label">
+                                <i class="fas fa-flask"></i> 給水量
+                            </label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="waterAmountMl" 
+                                       value="100" min="50" max="500" step="10">
+                                <span class="input-group-text">ml</span>
+                            </div>
+                            <div class="form-text">1回あたりの給水量（目安）</div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- カメラ設定 -->
+        <div class="col-lg-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0"><i class="fas fa-camera"></i> カメラ設定</h5>
+                </div>
+                <div class="card-body">
+                    <form id="cameraSettingsForm">
+                        <!-- 解像度設定 -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="fas fa-expand"></i> 画像解像度
+                            </label>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" id="cameraResolutionWidth" 
+                                               value="1280" min="640" max="1920" step="160">
+                                        <span class="input-group-text">px</span>
+                                    </div>
+                                    <div class="form-text">幅</div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" id="cameraResolutionHeight" 
+                                               value="720" min="480" max="1080" step="120">
+                                        <span class="input-group-text">px</span>
+                                    </div>
+                                    <div class="form-text">高さ</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 自動撮影時刻 -->
+                        <div class="mb-3">
+                            <label for="autoCaptureTime" class="form-label">
+                                <i class="fas fa-clock"></i> 自動撮影時刻
+                            </label>
+                            <input type="time" class="form-control" id="autoCaptureTime" value="06:00">
+                            <div class="form-text">毎日の自動撮影時刻</div>
+                        </div>
+
+                        <!-- 画像保存期間 -->
+                        <div class="mb-3">
+                            <label for="imageRetentionDays" class="form-label">
+                                <i class="fas fa-calendar-alt"></i> 画像保存期間
+                            </label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="imageRetentionDays" 
+                                       value="90" min="7" max="365" step="1">
+                                <span class="input-group-text">日</span>
+                            </div>
+                            <div class="form-text">古い画像の自動削除期間</div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- LINE通知設定 -->
+        <div class="col-lg-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="fab fa-line"></i> LINE通知設定</h5>
+                </div>
+                <div class="card-body">
+                    <form id="lineSettingsForm">
+                        <!-- LINE Notifyトークン -->
+                        <div class="mb-3">
+                            <label for="lineNotifyToken" class="form-label">
+                                <i class="fas fa-key"></i> LINE Notifyトークン
+                            </label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="lineNotifyToken" 
+                                       placeholder="LINE Notifyトークンを入力">
+                                <button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility('lineNotifyToken')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="form-text">
+                                <a href="https://notify-bot.line.me/" target="_blank">LINE Notify</a>でトークンを取得
+                            </div>
+                        </div>
+
+                        <!-- 通知設定 -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="fas fa-bell"></i> 通知タイミング
+                            </label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="notifyWatering" checked>
+                                <label class="form-check-label" for="notifyWatering">
+                                    給水完了時
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="notifyError" checked>
+                                <label class="form-check-label" for="notifyError">
+                                    エラー発生時
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="notifyWaterLow" checked>
+                                <label class="form-check-label" for="notifyWaterLow">
+                                    水不足時
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="notifyDaily">
+                                <label class="form-check-label" for="notifyDaily">
+                                    日次レポート
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- テスト通知 -->
+                        <div class="mb-3">
+                            <button type="button" class="btn btn-outline-success" onclick="sendTestNotification()">
+                                <i class="fas fa-paper-plane"></i> テスト通知を送信
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- システム設定 -->
+        <div class="col-lg-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0"><i class="fas fa-server"></i> システム設定</h5>
+                </div>
+                <div class="card-body">
+                    <form id="systemSettingsForm">
+                        <!-- データ保存パス -->
+                        <div class="mb-3">
+                            <label for="dataBasePath" class="form-label">
+                                <i class="fas fa-folder"></i> データ保存パス
+                            </label>
+                            <input type="text" class="form-control" id="dataBasePath" 
+                                   value="/mnt/usb-storage" readonly>
+                            <div class="form-text">センサーデータと画像の保存場所</div>
+                        </div>
+
+                        <!-- ログレベル -->
+                        <div class="mb-3">
+                            <label for="logLevel" class="form-label">
+                                <i class="fas fa-list-alt"></i> ログレベル
+                            </label>
+                            <select class="form-select" id="logLevel">
+                                <option value="DEBUG">DEBUG（詳細）</option>
+                                <option value="INFO" selected>INFO（標準）</option>
+                                <option value="WARNING">WARNING（警告のみ）</option>
+                                <option value="ERROR">ERROR（エラーのみ）</option>
+                            </select>
+                        </div>
+
+                        <!-- デバッグモード -->
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="debugMode">
+                                <label class="form-check-label" for="debugMode">
+                                    <i class="fas fa-bug"></i> デバッグモード
+                                </label>
+                            </div>
+                            <div class="form-text">開発時のみ有効にしてください</div>
+                        </div>
+
+                        <!-- 自動再起動 -->
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="autoRestart" checked>
+                                <label class="form-check-label" for="autoRestart">
+                                    <i class="fas fa-redo"></i> 自動再起動（24時間毎）
+                                </label>
+                            </div>
+                            <div class="form-text">システムの安定性向上のため</div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- 温度・湿度アラート設定 -->
+        <div class="col-lg-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0"><i class="fas fa-exclamation-triangle"></i> アラート設定</h5>
+                </div>
+                <div class="card-body">
+                    <form id="alertSettingsForm">
+                        <!-- 温度アラート -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="fas fa-thermometer-full"></i> 温度アラート範囲
+                            </label>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" id="tempAlertMin" 
+                                               value="5" min="-10" max="40" step="1">
+                                        <span class="input-group-text">°C</span>
+                                    </div>
+                                    <div class="form-text">最低温度</div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" id="tempAlertMax" 
+                                               value="35" min="0" max="50" step="1">
+                                        <span class="input-group-text">°C</span>
+                                    </div>
+                                    <div class="form-text">最高温度</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 湿度アラート -->
+                        <div class="mb-3">
+                            <label class="form-label">
+                                <i class="fas fa-tint"></i> 湿度アラート範囲
+                            </label>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" id="humidityAlertMin" 
+                                               value="30" min="0" max="100" step="5">
+                                        <span class="input-group-text">%</span>
+                                    </div>
+                                    <div class="form-text">最低湿度</div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" id="humidityAlertMax" 
+                                               value="80" min="0" max="100" step="5">
+                                        <span class="input-group-text">%</span>
+                                    </div>
+                                    <div class="form-text">最高湿度</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- センサーエラー回数 -->
+                        <div class="mb-3">
+                            <label for="sensorErrorThreshold" class="form-label">
+                                <i class="fas fa-times-circle"></i> センサーエラー閾値
+                            </label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="sensorErrorThreshold" 
+                                       value="3" min="1" max="10" step="1">
+                                <span class="input-group-text">回</span>
+                            </div>
+                            <div class="form-text">連続エラーでアラート送信</div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 設定の保存・復元 -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0"><i class="fas fa-cogs"></i> 設定の管理</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-download"></i> 設定のエクスポート</h6>
+                            <p class="text-muted">現在の設定をJSONファイルとしてダウンロードします。</p>
+                            <button type="button" class="btn btn-outline-primary" onclick="exportSettings()">
+                                <i class="fas fa-file-export"></i> 設定をエクスポート
+                            </button>
+                        </div>
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-upload"></i> 設定のインポート</h6>
+                            <p class="text-muted">以前にエクスポートした設定ファイルを読み込みます。</p>
+                            <div class="input-group">
+                                <input type="file" class="form-control" id="settingsFile" accept=".json">
+                                <button class="btn btn-outline-secondary" type="button" onclick="importSettings()">
+                                    <i class="fas fa-file-import"></i> インポート
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 設定保存確認モーダル -->
+<div class="modal fade" id="saveConfirmModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-save"></i> 設定の保存</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>設定を保存しますか？</p>
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    一部の設定はシステム再起動後に反映されます。
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+                <button type="button" class="btn btn-success" onclick="confirmSaveSettings()">
+                    <i class="fas fa-save"></i> 保存する
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+// 設定データを管理するオブジェクト
+let currentSettings = {};
+
+// ページ読み込み時に現在の設定を取得
+document.addEventListener('DOMContentLoaded', function() {
+    loadCurrentSettings();
+});
+
+// 現在の設定を読み込み
+async function loadCurrentSettings() {
+    try {
+        const response = await fetch('/api/settings');
+        if (response.ok) {
+            currentSettings = await response.json();
+            populateSettingsForm(currentSettings);
+        } else {
+            console.error('設定の読み込みに失敗しました');
+        }
+    } catch (error) {
+        console.error('設定の読み込みエラー:', error);
+        // デフォルト値を使用
+        loadDefaultSettings();
+    }
+}
+
+// デフォルト設定を読み込み
+function loadDefaultSettings() {
+    currentSettings = {
+        // センサー設定
+        temperatureHumidityInterval: 1800,
+        soilMoistureInterval: 300,
+        sensorCheckInterval: 60,
+        
+        // 給水設定
+        soilMoistureThreshold: 159,
+        wateringIntervalHours: 12,
+        wateringDurationSeconds: 5,
+        waterAmountMl: 100,
+        
+        // カメラ設定
+        cameraResolutionWidth: 1280,
+        cameraResolutionHeight: 720,
+        autoCaptureTime: '06:00',
+        imageRetentionDays: 90,
+        
+        // LINE通知設定
+        lineNotifyToken: '',
+        notifyWatering: true,
+        notifyError: true,
+        notifyWaterLow: true,
+        notifyDaily: false,
+        
+        // システム設定
+        dataBasePath: '/mnt/usb-storage',
+        logLevel: 'INFO',
+        debugMode: false,
+        autoRestart: true,
+        
+        // アラート設定
+        tempAlertMin: 5,
+        tempAlertMax: 35,
+        humidityAlertMin: 30,
+        humidityAlertMax: 80,
+        sensorErrorThreshold: 3
+    };
+    populateSettingsForm(currentSettings);
+}
+
+// フォームに設定値を反映
+function populateSettingsForm(settings) {
+    Object.keys(settings).forEach(key => {
+        const element = document.getElementById(key);
+        if (element) {
+            if (element.type === 'checkbox') {
+                element.checked = settings[key];
+            } else {
+                element.value = settings[key];
+            }
+        }
+    });
+}
+
+// 全設定を保存
+function saveAllSettings() {
+    // モーダルを表示
+    const modal = new bootstrap.Modal(document.getElementById('saveConfirmModal'));
+    modal.show();
+}
+
+// 設定保存を確認
+async function confirmSaveSettings() {
+    try {
+        // フォームから設定値を収集
+        const settings = collectSettingsFromForm();
+        
+        // サーバーに送信
+        const response = await fetch('/api/settings', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(settings)
+        });
+        
+        if (response.ok) {
+            showAlert('success', '設定が保存されました');
+            currentSettings = settings;
+            
+            // モーダルを閉じる
+            const modal = bootstrap.Modal.getInstance(document.getElementById('saveConfirmModal'));
+            modal.hide();
+        } else {
+            showAlert('danger', '設定の保存に失敗しました');
+        }
+    } catch (error) {
+        console.error('設定保存エラー:', error);
+        showAlert('danger', '設定の保存中にエラーが発生しました');
+    }
+}
+
+// フォームから設定値を収集
+function collectSettingsFromForm() {
+    const settings = {};
+    
+    // 各フォーム要素から値を取得
+    const formElements = document.querySelectorAll('#sensorSettingsForm input, #wateringSettingsForm input, #cameraSettingsForm input, #lineSettingsForm input, #systemSettingsForm input, #systemSettingsForm select, #alertSettingsForm input');
+    
+    formElements.forEach(element => {
+        if (element.type === 'checkbox') {
+            settings[element.id] = element.checked;
+        } else if (element.type === 'number') {
+            settings[element.id] = parseInt(element.value) || 0;
+        } else {
+            settings[element.id] = element.value;
+        }
+    });
+    
+    return settings;
+}
+
+// デフォルト設定に戻す
+function resetToDefaults() {
+    if (confirm('設定をデフォルト値に戻しますか？')) {
+        loadDefaultSettings();
+        showAlert('info', 'デフォルト設定を読み込みました');
+    }
+}
+
+// パスワード表示切り替え
+function togglePasswordVisibility(inputId) {
+    const input = document.getElementById(inputId);
+    const button = input.nextElementSibling;
+    const icon = button.querySelector('i');
+    
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.className = 'fas fa-eye-slash';
+    } else {
+        input.type = 'password';
+        icon.className = 'fas fa-eye';
+    }
+}
+
+// テスト通知送信
+async function sendTestNotification() {
+    try {
+        const token = document.getElementById('lineNotifyToken').value;
+        if (!token) {
+            showAlert('warning', 'LINE Notifyトークンを入力してください');
+            return;
+        }
+        
+        const response = await fetch('/api/notifications/test', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ token: token })
+        });
+        
+        if (response.ok) {
+            showAlert('success', 'テスト通知を送信しました');
+        } else {
+            showAlert('danger', 'テスト通知の送信に失敗しました');
+        }
+    } catch (error) {
+        console.error('テスト通知エラー:', error);
+        showAlert('danger', 'テスト通知の送信中にエラーが発生しました');
+    }
+}
+
+// 設定をエクスポート
+function exportSettings() {
+    const settings = collectSettingsFromForm();
+    const dataStr = JSON.stringify(settings, null, 2);
+    const dataBlob = new Blob([dataStr], {type: 'application/json'});
+    
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(dataBlob);
+    link.download = `smart-planter-settings-${new Date().toISOString().split('T')[0]}.json`;
+    link.click();
+    
+    showAlert('success', '設定をエクスポートしました');
+}
+
+// 設定をインポート
+function importSettings() {
+    const fileInput = document.getElementById('settingsFile');
+    const file = fileInput.files[0];
+    
+    if (!file) {
+        showAlert('warning', 'ファイルを選択してください');
+        return;
+    }
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const settings = JSON.parse(e.target.result);
+            populateSettingsForm(settings);
+            showAlert('success', '設定をインポートしました');
+        } catch (error) {
+            showAlert('danger', '設定ファイルの形式が正しくありません');
+        }
+    };
+    reader.readAsText(file);
+}
+
+// アラート表示
+function showAlert(type, message) {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+    alertDiv.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    document.body.appendChild(alertDiv);
+    
+    // 5秒後に自動削除
+    setTimeout(() => {
+        if (alertDiv.parentNode) {
+            alertDiv.remove();
+        }
+    }, 5000);
+}
+</script>
+{% endblock %}
