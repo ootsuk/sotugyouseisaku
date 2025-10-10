@@ -41,6 +41,12 @@ def create_app():
         """設定ページ"""
         return render_template('settings.html')
     
+    @app.route('/logs')
+    def logs():
+        """ログページ"""
+        # TODO: ログページを実装
+        return render_template('index.html')  # 暫定的にindex.htmlを表示
+    
     @app.route('/api/status')
     def api_status():
         """システムステータスAPI"""
