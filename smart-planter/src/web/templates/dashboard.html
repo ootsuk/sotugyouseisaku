@@ -1,0 +1,200 @@
+{% extends "base.html" %}
+
+{% block title %}ダッシュボード - すくすくミントちゃん{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- システムステータス -->
+    <div class="col-12 mb-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-info-circle"></i> システムステータス</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <h6>システム状態</h6>
+                            <span id="system-status" class="badge bg-success">稼働中</span>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <h6>最終更新</h6>
+                            <span id="last-update">-</span>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <h6>稼働時間</h6>
+                            <span id="uptime">-</span>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <h6>バージョン</h6>
+                            <span id="version">1.0.0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- センサーデータ -->
+    <div class="col-lg-8 mb-4">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="fas fa-thermometer-half"></i> センサーデータ</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <!-- 温度 -->
+                    <div class="col-md-4 mb-3">
+                        <div class="sensor-card">
+                            <div class="sensor-icon">
+                                <i class="fas fa-thermometer-half"></i>
+                            </div>
+                            <div class="sensor-info">
+                                <h6>温度</h6>
+                                <div class="sensor-value" id="temperature">-</div>
+                                <div class="sensor-unit">°C</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 湿度 -->
+                    <div class="col-md-4 mb-3">
+                        <div class="sensor-card">
+                            <div class="sensor-icon">
+                                <i class="fas fa-tint"></i>
+                            </div>
+                            <div class="sensor-info">
+                                <h6>湿度</h6>
+                                <div class="sensor-value" id="humidity">-</div>
+                                <div class="sensor-unit">%</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 土壌水分 -->
+                    <div class="col-md-4 mb-3">
+                        <div class="sensor-card">
+                            <div class="sensor-icon">
+                                <i class="fas fa-seedling"></i>
+                            </div>
+                            <div class="sensor-info">
+                                <h6>土壌水分</h6>
+                                <div class="sensor-value" id="soil-moisture">-</div>
+                                <div class="sensor-unit">-</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 水の残量 -->
+                    <div class="col-md-6 mb-3">
+                        <div class="sensor-card">
+                            <div class="sensor-icon">
+                                <i class="fas fa-tint"></i>
+                            </div>
+                            <div class="sensor-info">
+                                <h6>水の残量</h6>
+                                <div class="sensor-value" id="water-volume">-</div>
+                                <div class="sensor-unit">ml</div>
+                                <div class="progress mt-2">
+                                    <div class="progress-bar" id="water-progress" role="progressbar"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 水の残量パーセンテージ -->
+                    <div class="col-md-6 mb-3">
+                        <div class="sensor-card">
+                            <div class="sensor-icon">
+                                <i class="fas fa-percentage"></i>
+                            </div>
+                            <div class="sensor-info">
+                                <h6>残量</h6>
+                                <div class="sensor-value" id="water-percentage">-</div>
+                                <div class="sensor-unit">%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 操作パネル -->
+    <div class="col-lg-4 mb-4">
+        <div class="card">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0"><i class="fas fa-tools"></i> 操作パネル</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <button class="btn btn-primary" onclick="manualWatering()">
+                        <i class="fas fa-tint"></i> 手動給水
+                    </button>
+                    <button class="btn btn-info" onclick="capturePhoto()">
+                        <i class="fas fa-camera"></i> 写真撮影
+                    </button>
+                    <button class="btn btn-secondary" onclick="refreshData()">
+                        <i class="fas fa-sync-alt"></i> データ更新
+                    </button>
+                    <button class="btn btn-danger" onclick="emergencyStop()">
+                        <i class="fas fa-stop"></i> 緊急停止
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- グラフ -->
+    <div class="col-12 mb-4">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="fas fa-chart-line"></i> センサーデータグラフ</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="sensorChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- 給水履歴 -->
+    <div class="col-12 mb-4">
+        <div class="card">
+            <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0"><i class="fas fa-history"></i> 給水履歴</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>日時</th>
+                                <th>種類</th>
+                                <th>時間</th>
+                                <th>土壌水分（前）</th>
+                                <th>土壌水分（後）</th>
+                                <th>状態</th>
+                            </tr>
+                        </thead>
+                        <tbody id="watering-history">
+                            <tr>
+                                <td colspan="6" class="text-center">データを読み込み中...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}
