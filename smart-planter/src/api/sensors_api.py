@@ -10,15 +10,13 @@ from datetime import datetime
 from typing import Dict, Any
 
 # センサー制御モジュールをインポート
-try:
-    from gpiozero import MCP3002
-    SENSOR_AVAILABLE = True
-except ImportError:
-    SENSOR_AVAILABLE = False
-    # Raspberry Pi以外の環境ではダミーデータを使用
+from src.sensors.sensor_manager import SensorManager
 
 sensors_bp = Blueprint('sensors', __name__, url_prefix='/api/sensors')
 api = Api(sensors_bp)
+
+# センサーマネージャーのインスタンスを作成
+sensor_manager = SensorManager()
 
 
 class SensorsResource(Resource):
@@ -30,23 +28,22 @@ class SensorsResource(Resource):
     def get(self):
         """全センサーデータを取得"""
         try:
-            # 土壌水分センサーデータ取得
-            soil_moisture = self._get_soil_moisture()
+            # センサーマネージャーから最新データを取得
+            latest_data = sensor_manager.get_latest_data()
             
-            # TODO: 温湿度センサー実装後に取得
-            temperature = 25.5
-            humidity = 60.0
-            
-            # TODO: 水位センサー実装後に取得
-            water_volume = 1500
-            water_percentage = 75
+            # 水位から水量を計算（簡易計算）
+            water_present = latest_data.get('water_present', True)
+            water_volume = 1500 if water_present else 300
+            water_percentage = 75 if water_present else 15
             
             sensor_data = {
-                'temperature': temperature,
-                'humidity': humidity,
-                'soil_moisture': soil_moisture,
+                'temperature': latest_data.get('temperature'),
+                'humidity': latest_data.get('humidity'),
+                'soil_moisture': latest_data.get('soil_moisture'),
+                'soil_moisture_percentage': latest_data.get('soil_moisture_percentage'),
                 'water_volume': water_volume,
                 'water_percentage': water_percentage,
+                'water_level': latest_data.get('water_level'),
                 'pressure': None,
                 'timestamp': datetime.now().isoformat()
             }
@@ -64,18 +61,6 @@ class SensorsResource(Resource):
                 'message': 'センサーデータの取得に失敗しました'
             }, 500
     
-    def _get_soil_moisture(self) -> int:
-        """土壌水分センサーから値を取得"""
-        if not SENSOR_AVAILABLE:
-            return 180  # ダミー値
-        
-        try:
-            sen0193 = MCP3002(channel=0)
-            raw_value = int(sen0193.value * 255)
-            return raw_value
-        except Exception as e:
-            self.logger.warning(f"土壌水分センサー読み取りエラー: {e}")
-            return 180  # エラー時はダミー値
 
 
 class SensorHistoryResource(Resource):
