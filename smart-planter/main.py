@@ -15,6 +15,7 @@ project_root = Path(__file__).parent
 sys.path.insert(0, str(project_root))
 
 from src.app.app import create_app
+from src.api.api_blueprint import register_api_blueprints
 from src.utils.logger import setup_logging
 
 def main():
@@ -28,6 +29,10 @@ def main():
         
         # Flaskアプリケーション作成
         app = create_app()
+        
+        # APIブループリントを登録
+        register_api_blueprints(app)
+        logger.info("📡 APIエンドポイント登録完了")
         
         # アプリケーション実行
         app.run(
