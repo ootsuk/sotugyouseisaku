@@ -64,17 +64,51 @@ python main.py
 ```
 
 ### 4. アクセス
-- Web UI: http://192.168.1.100:5000
-- mDNS: http://smart-planter.local:5000
+- Web UI: http://localhost:8080
+- ダッシュボード: http://localhost:8080/dashboard
+- 設定画面: http://localhost:8080/settings
+
+## 🌐 API エンドポイント
+
+### センサーAPI
+- `GET /api/sensors/` - 全センサーデータ取得
+- `GET /api/sensors/history` - センサー履歴取得
+- `GET /api/sensors/water-level` - 水位データ取得
+
+### 給水API
+- `POST /api/watering/` - 手動給水実行
+- `GET /api/watering/history` - 給水履歴取得
+- `POST /api/watering/stop` - 緊急停止
+
+### カメラAPI
+- `POST /api/camera/capture` - 写真撮影
+- `GET /api/camera/images` - 画像リスト取得
+
+### 設定API
+- `GET/POST /api/settings/` - 設定取得・保存
+- `POST /api/settings/reset` - 設定リセット
+
+### 通知API
+- `POST /api/notifications/test` - テスト通知送信
+- `POST /api/notifications/alert` - アラート送信
+- `GET /api/notifications/history` - 通知履歴取得
 
 ## 📚 ドキュメント
-- [開発環境構築手順書](../開発環境構築手順書.md)
-- [センサー制御機能実装手順書](../センサー制御機能実装手順書.md)
-- [自動給水機能実装手順書](../自動給水機能実装手順書.md)
-- [Web UI機能実装手順書](../Web UI機能実装手順書.md)
-- [データ管理機能実装手順書](../データ管理機能実装手順書.md)
-- [LINE通知サービス実装手順書](../LINE通知サービス実装手順書.md)
-- [統合テスト手順書](../統合テスト手順書.md)
+
+### 📖 システム設計書
+- **[ARCHITECTURE.md](ARCHITECTURE.md)** - システム全体のアーキテクチャと連携図
+- **[FUNCTION_REFERENCE.md](FUNCTION_REFERENCE.md)** - 全関数・メソッドの詳細リファレンス
+- **[SETUP_GUIDE.md](SETUP_GUIDE.md)** - 環境構築手順
+- **[INTEGRATION_TEST.md](INTEGRATION_TEST.md)** - 統合テスト手順
+
+### 📂 モジュール別ガイド
+- [センサーモジュール](src/sensors/INTEGRATED_GUIDE.md)
+- [給水制御モジュール](src/watering/INTEGRATED_GUIDE.md)
+- [カメラモジュール](docs/CAMERA_GUIDE.md)
+- [データ管理](src/data/INTEGRATED_GUIDE.md)
+- [LINE通知](src/notifications/INTEGRATED_GUIDE.md)
+- [Web UI](docs/WEB_GUIDE.md)
+- [API](src/api/INTEGRATED_GUIDE.md)
 
 ## 🧪 テスト
 ```bash
@@ -113,9 +147,57 @@ MIT License
 - **サブリーダー**: 大塚
 - **メンバー**: 網中、川渕、檜室
 
+## 🔀 ブランチ戦略
+
+### メインブランチ
+- `main` - 本番用（安定版）
+- `integration/test-all-features` - 統合テスト用（最新機能）
+
+### 機能ブランチ
+- `feature-front` - フロントエンド開発
+- `feature-bacend` - バックエンド開発
+- `feature/sensors-implementation` - センサーモジュール
+
+### 開発の流れ
+```bash
+# 統合ブランチを取得
+git checkout integration/test-all-features
+git pull origin integration/test-all-features
+
+# 機能開発
+git checkout -b feature/your-feature
+# ... 開発 ...
+git commit -m "feat: ..."
+
+# 統合ブランチにマージ
+git checkout integration/test-all-features
+git merge feature/your-feature
+
+# テスト後、mainにマージ
+git checkout main
+git merge integration/test-all-features
+```
+
+## 📊 実装状況
+
+### ✅ 完成済み
+- [x] APIレイヤー（6ファイル、14エンドポイント）
+- [x] センサーシステム（5ファイル、3種類のセンサー）
+- [x] カメラ撮影機能
+- [x] Web UI（ダッシュボード・設定画面）
+- [x] 設定の永続化
+- [x] 統合テストフレームワーク
+
+### ⏳ 開発中
+- [ ] 給水制御モジュール
+- [ ] データ管理モジュール（CSV/JSON）
+- [ ] LINE通知機能
+- [ ] カメラ拡張（タイムラプス）
+
 ---
 
-**作成日**: 2025年1月
-**バージョン**: 1.0
+**作成日**: 2025年1月  
+**最終更新**: 2025年10月15日  
+**バージョン**: 1.1 (integration/test-all-features)  
 **チーム**: KEBABS
 
