@@ -633,21 +633,27 @@ function initializeWebSocket() {
 // イベントリスナー初期化
 function initializeEventListeners() {
     // データ更新ボタン
-    const refreshBtn = document.getElementById('refresh-btn');
+    const refreshBtn = document.getElementById('refresh-data-btn');
     if (refreshBtn) {
         refreshBtn.addEventListener('click', refreshData);
     }
     
     // 手動給水ボタン
-    const wateringBtn = document.getElementById('watering-btn');
+    const wateringBtn = document.getElementById('manual-watering-btn');
     if (wateringBtn) {
         wateringBtn.addEventListener('click', manualWatering);
     }
     
     // 写真撮影ボタン
-    const photoBtn = document.getElementById('photo-btn');
+    const photoBtn = document.getElementById('capture-photo-btn');
     if (photoBtn) {
         photoBtn.addEventListener('click', capturePhoto);
+    }
+
+    // 緊急停止ボタン
+    const stopBtn = document.getElementById('emergency-stop-btn');
+    if (stopBtn) {
+        stopBtn.addEventListener('click', emergencyStop);
     }
 }
 
@@ -1083,4 +1089,3 @@ python main.py
 **作成日**: 2025年1月
 **バージョン**: 1.0
 **チーム**: KEBABS
-
